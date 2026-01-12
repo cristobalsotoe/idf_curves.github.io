@@ -1,7 +1,8 @@
 ---
 layout: page
 title: Acerca de Curvas IDF
-description: Información sobre nuestra herramienta para curvas IDF en curvasidf.cl.
+description: Información sobre la plataforma que web curvasidf.cl.
+permalink: /about/
 ---
 
 curvasidf.cl es una plataforma que web diseñada facilitar a los profesionales y tomadores de decisiones la obtención de curvas IDF para el diseño de infraestructura resiliente al clima y la gestión de los impactos del cambio climático en los recursos hídricos en Chile.
@@ -14,4 +15,4 @@ Nuestro análisis muestra que el patrón espacial de la precipitación media anu
 
 En el centro de Chile, todos los productos mostraron disminuciones significativas en Imax o no hubo tendencias detectables. De manera crucial, nuestros resultados sugieren que, para esta área de estudio, la elección entre enfoques estacionarios y no estacionarios no afecta significativamente la estimación de IMAX, ya que incluso las ubicaciones con tendencias significativas mostraron diferencias mínimas entre ambos modelos.
 
-Estos resultados subrayan la utilidad y necesidad de curvas IDF grilldas les de alta resolución en la planificación hidrológica. Para cerrar la brecha entre la investigación y la práctica, lanzamos curvasIDF.cl, una plataforma web abierta que pone estos resultados a disposición instantánea de la comunidad.
+Estos resultados subrayan la utilidad y necesidad de curvas IDF grilldas de alta resolución en la planificación hidrológica. Para cerrar la brecha entre la investigación y la práctica, lanzamos curvasIDF.cl, una plataforma web abierta que pone estos resultados a disposición instantánea de la comunidad.
