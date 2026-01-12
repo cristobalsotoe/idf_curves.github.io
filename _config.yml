@@ -21,7 +21,7 @@
 title: Curvas IDF Chile
 email: cristobal.soto.9@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Herramienta interactiva para generar curvas IDF para diseño hidrológico en Chile. Desarrollado por Cristóbal Soto
+  curvasidf.cl es una plataforma que web diseñada facilitar a los profesionales y tomadores de decisiones la obtención de curvas IDF para el diseño de infraestructura resiliente al clima y la gestión de los impactos del cambio climático en los recursos hídricos en Chile.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://curvasidf.cl"
 twitter_username: jekyllrb
