@@ -1,0 +1,11 @@
+---
+---
+@import "minima";
+
+/* Aquí puedes sobrescribir los estilos del tema */
+
+/* Ejemplo: Si prefieres ajustar el ancho de la columna 2 manualmente en lugar de cambiar la clase HTML */
+.footer-col-2 {
+  width: -webkit-calc(30% - (30px / 2));
+  width: calc(30% - 30px / 2);
+}
