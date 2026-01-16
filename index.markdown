@@ -1,6 +1,6 @@
 ---
 layout: fullscreen-iframe
-title: Curvas IDF Chile
+title: Curvas IDF
 sitemap:
   priority: 1.0
   changefreq: monthly
