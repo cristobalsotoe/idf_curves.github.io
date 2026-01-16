@@ -18,10 +18,10 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Curvas IDF Chile
+title: Curvas IDF
 email: cristobal.soto.9@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  curvasidf.cl es una plataforma que web que facilita la obtención de curvas IDF para el diseño de infraestructura en Chile.
+  Herramienta en línea para visualizar y obtener curvas IDF en Chile. Entrega intensidades máximas de precipitación para distintos periodos de retorno y duraciones.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://curvasidf.cl"
 twitter_username: jekyllrb
