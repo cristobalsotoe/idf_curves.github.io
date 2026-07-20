@@ -1,0 +1,90 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import GlobalHeader from '../components/GlobalHeader.astro';
+import GlobalFooter from '../components/GlobalFooter.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedAt?: Date;
+}
+
+const {
+  title,
+  description,
+  image = '/og.png',
+  type = 'website',
+  publishedAt,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const imageUrl = new URL(image, Astro.site);
+const fullTitle = title === 'Curvas IDF Chile' ? title : `${title} — Curvas IDF Chile`;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': type === 'article' ? 'Article' : 'WebSite',
+  name: fullTitle,
+  headline: title,
+  description,
+  url: canonical.toString(),
+  image: imageUrl.toString(),
+  ...(publishedAt ? { datePublished: publishedAt.toISOString() } : {}),
+};
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#153A5F" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:locale" content="es_CL" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+    <title>{fullTitle}</title>
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Ir al contenido</a>
+    <GlobalHeader />
+    <main id="contenido">
+      <slot />
+    </main>
+    <GlobalFooter />
+    <script>
+      const initReveal = () => {
+        const elements = document.querySelectorAll<HTMLElement>('.reveal:not([data-reveal-ready])');
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          elements.forEach((element) => element.classList.add('is-visible'));
+          return;
+        }
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        elements.forEach((element) => {
+          element.dataset.revealReady = 'true';
+          observer.observe(element);
+        });
+      };
+      document.addEventListener('astro:page-load', initReveal);
+      initReveal();
+    </script>
+  </body>
+</html>

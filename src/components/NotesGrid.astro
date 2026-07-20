@@ -1,0 +1,42 @@
+---
+interface Note {
+  id: string;
+  data: { title: string; summary: string; publishedAt: Date; category: string; tags: string[] };
+}
+interface Props { notes: Note[]; }
+const { notes } = Astro.props;
+const dateFormat = new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+<div class="notes-grid">
+  {notes.map((note, index) => (
+    <article class="note-card reveal" style={`transition-delay:${(index % 3) * 70}ms`}>
+      <div class="note-card__top">
+        <span>{note.data.category}</span>
+        <time datetime={note.data.publishedAt.toISOString()}>{dateFormat.format(note.data.publishedAt)}</time>
+      </div>
+      <h3><a href={`/notas/${note.id}`}>{note.data.title}</a></h3>
+      <p>{note.data.summary}</p>
+      <div class="note-card__bottom">
+        <div>{note.data.tags.slice(0, 2).map((tag) => <span>{tag}</span>)}</div>
+        <a aria-label={`Leer ${note.data.title}`} href={`/notas/${note.id}`}>→</a>
+      </div>
+    </article>
+  ))}
+</div>
+
+<style>
+  .notes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .note-card { min-height: 350px; display: flex; padding: clamp(1.5rem, 3vw, 2.2rem); flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius-md); background: white; transition: transform 260ms var(--ease-out), box-shadow 260ms ease, border-color 260ms ease, opacity 750ms var(--ease-out); }
+  .note-card:hover { transform: translateY(-6px); border-color: var(--rain-500); box-shadow: var(--shadow-lg); }
+  .note-card__top { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: .68rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+  .note-card__top > span { color: var(--red-600); }
+  .note-card h3 { margin: 3rem 0 1rem; font-size: clamp(1.5rem, 2.5vw, 2.1rem); }
+  .note-card h3 a { text-decoration: none; }
+  .note-card > p { color: var(--muted); font-size: .92rem; }
+  .note-card__bottom { display: flex; margin-top: auto; padding-top: 2rem; justify-content: space-between; gap: 1rem; align-items: end; }
+  .note-card__bottom div { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .note-card__bottom div span { padding: .25rem .5rem; border-radius: 999px; background: var(--mist); color: var(--navy-700); font-size: .65rem; font-weight: 700; }
+  .note-card__bottom > a { display: grid; flex: 0 0 auto; width: 2.5rem; height: 2.5rem; place-items: center; border-radius: 50%; color: white; background: var(--navy-800); font-size: 1.25rem; text-decoration: none; }
+  @media (max-width: 880px) { .notes-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 580px) { .notes-grid { grid-template-columns: 1fr; } .note-card { min-height: 310px; } }
+</style>

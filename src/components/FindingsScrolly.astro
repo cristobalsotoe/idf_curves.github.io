@@ -1,0 +1,64 @@
+---
+const findings = [
+  { key: 'territorio', number: '01', title: 'Un territorio contrastante', text: 'La precipitación media aumenta hacia el sur, pero los máximos de intensidad se concentran principalmente en Chile central y sur.' },
+  { key: 'andes', number: '02', title: 'El relieve importa', text: 'Para duraciones de 24 horas o más, los mayores valores aparecen en los Andes entre las regiones del Maule y La Araucanía.' },
+  { key: 'productos', number: '03', title: 'Tres productos convergen', text: 'IMERG v07B, ERA5 y ERA5-Land muestran estimaciones comparables. El estudio propone considerar su máximo para un diseño más conservador.' },
+  { key: 'incertidumbre', number: '04', title: 'Leer con contexto', text: 'La escasez de estaciones limita la evaluación en el extremo norte. Los mapas deben utilizarse junto con criterio hidrológico y datos locales.' },
+];
+---
+<div class="findings" data-findings>
+  <div class="findings__visual" aria-hidden="true">
+    <div class="chile-shape">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <div class="visual-rings"><span></span><span></span><span></span></div>
+    <p class="visual-label">Patrones espaciales<br /><strong>de intensidad máxima</strong></p>
+  </div>
+  <div class="findings__list">
+    {findings.map((item, index) => (
+      <article class="finding" data-finding={item.key} data-active={index === 0 ? 'true' : 'false'}>
+        <span>{item.number}</span>
+        <h3>{item.title}</h3>
+        <p>{item.text}</p>
+      </article>
+    ))}
+  </div>
+</div>
+
+<script>
+  const initFindings = () => {
+    const root = document.querySelector<HTMLElement>('[data-findings]');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = 'true';
+    const items = [...root.querySelectorAll<HTMLElement>('[data-finding]')];
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) items.forEach((item) => item.dataset.active = String(item === entry.target));
+      });
+    }, { rootMargin: '-35% 0px -45%', threshold: 0 });
+    items.forEach((item) => observer.observe(item));
+  };
+  document.addEventListener('astro:page-load', initFindings);
+  initFindings();
+</script>
+
+<style>
+  .findings { display: grid; grid-template-columns: minmax(340px, 0.9fr) minmax(0, 1.1fr); gap: clamp(3rem, 9vw, 9rem); }
+  .findings__visual { position: sticky; top: 8rem; height: min(68vh, 660px); overflow: hidden; border-radius: var(--radius-lg); background: linear-gradient(155deg, #0b2843, #153a5f 58%, #2d7189); box-shadow: var(--shadow-lg); }
+  .findings__visual::before { content: ''; position: absolute; inset: 0; opacity: .18; background-image: linear-gradient(rgb(255 255 255 / .25) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / .25) 1px, transparent 1px); background-size: 46px 46px; }
+  .chile-shape { position: absolute; left: 48%; top: 8%; width: 16%; height: 80%; transform: rotate(7deg); }
+  .chile-shape i { display: block; width: var(--w, 70%); height: 10%; margin: 0 auto -1px; border-radius: 50% 40% 48% 52%; background: var(--rain-200); opacity: var(--o, .8); transform: translateX(var(--x, 0)); transition: width 650ms var(--ease-out), opacity 650ms ease, background 650ms ease; }
+  .chile-shape i:nth-child(1) { --w: 34%; --x: -10px; }.chile-shape i:nth-child(2) { --w: 42%; --x: 5px; }.chile-shape i:nth-child(3) { --w: 48%; --x: -3px; }.chile-shape i:nth-child(4) { --w: 62%; --x: 7px; --o: .9; }.chile-shape i:nth-child(5) { --w: 78%; --x: -5px; --o: 1; background: #ef777a; }.chile-shape i:nth-child(6) { --w: 68%; --x: 8px; background: #ef777a; }.chile-shape i:nth-child(7) { --w: 70%; --x: -1px; }.chile-shape i:nth-child(8) { --w: 85%; --x: 7px; }.chile-shape i:nth-child(9) { --w: 92%; --x: -6px; }
+  .visual-rings span { position: absolute; left: 56%; top: 55%; width: 8rem; aspect-ratio: 1; border: 1px solid rgb(255 255 255 / .35); border-radius: 50%; animation: pulse 4s ease-out 2; }
+  .visual-rings span:nth-child(2) { animation-delay: -1.3s; }.visual-rings span:nth-child(3) { animation-delay: -2.6s; }
+  .visual-label { position: absolute; left: 2rem; bottom: 2rem; color: var(--rain-200); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+  .visual-label strong { color: white; }
+  .findings__list { padding-block: 16vh; }
+  .finding { min-height: 52vh; display: grid; align-content: center; gap: 1rem; padding: 2rem 0; opacity: .27; transform: translateX(25px); transition: opacity 450ms ease, transform 650ms var(--ease-out); }
+  .finding[data-active='true'] { opacity: 1; transform: translateX(0); }
+  .finding > span { color: var(--red-500); font-family: var(--font-display); font-size: 1rem; font-weight: 800; }
+  .finding h3 { font-size: clamp(2.1rem, 4vw, 3.6rem); }
+  .finding p { max-width: 600px; color: var(--muted); font-size: clamp(1rem, 1.4vw, 1.2rem); }
+  @keyframes pulse { from { opacity: .55; transform: translate(-50%, -50%) scale(.3); } to { opacity: 0; transform: translate(-50%, -50%) scale(2.7); } }
+  @media (max-width: 780px) { .findings { grid-template-columns: 1fr; } .findings__visual { position: relative; top: 0; height: 430px; } .findings__list { padding-block: 1rem; } .finding { min-height: auto; padding: 3rem 0; opacity: 1; transform: none; border-bottom: 1px solid var(--line); } }
+</style>

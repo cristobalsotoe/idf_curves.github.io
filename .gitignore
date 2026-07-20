@@ -3,3 +3,12 @@ _site
 .jekyll-cache
 .jekyll-metadata
 vendor
+
+# Astro / Node
+node_modules/
+dist/
+.astro/
+
+# Local production files
+.DS_Store
+tmp/

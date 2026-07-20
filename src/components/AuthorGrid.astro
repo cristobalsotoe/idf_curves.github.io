@@ -1,0 +1,29 @@
+---
+const authors = [
+  { name: 'Cristóbal Soto-Escobar', initials: 'CS', href: 'https://cristobalsoto.cl/' },
+  { name: 'Mauricio Zambrano-Bigiarini', initials: 'MZ', href: 'https://mzb.cl/' },
+  { name: 'Violeta Tolorza', initials: 'VT' },
+  { name: 'René Garreaud', initials: 'RG' },
+];
+const peopleSchema = authors.map((author) => ({ '@context': 'https://schema.org', '@type': 'Person', name: author.name, ...(author.href ? { url: author.href } : {}) }));
+---
+<div class="author-grid">
+  {authors.map((author, index) => (
+    <article class="author reveal" style={`transition-delay:${index * 70}ms`}>
+      <div class="author__avatar">{author.initials}</div>
+      <h3>{author.href ? <a href={author.href}>{author.name}</a> : author.name}</h3>
+    </article>
+  ))}
+</div>
+<script is:inline type="application/ld+json" set:html={JSON.stringify(peopleSchema)}></script>
+
+<style>
+  .author-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .author { min-height: 180px; display: grid; padding: 1.5rem; align-content: space-between; border: 1px solid var(--line); border-radius: var(--radius-md); background: white; }
+  .author__avatar { width: 3.6rem; aspect-ratio: 1; display: grid; place-items: center; margin-bottom: 2rem; border-radius: 50%; color: white; background: var(--navy-800); font-family: var(--font-display); font-weight: 800; }
+  .author:nth-child(2) .author__avatar { background: var(--red-500); }.author:nth-child(3) .author__avatar { color: var(--navy-950); background: var(--rain-200); }
+  .author h3 { font-size: 1.3rem; }
+  .author h3 a { text-decoration: none; }.author h3 a:hover { text-decoration: underline; }
+  @media (max-width: 850px) { .author-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .author-grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,65 @@
+<section class="hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <p class="eyebrow">Investigación abierta para la ingeniería y la gestión hídrica</p>
+      <h1>Curvas IDF de alta resolución para <em>Chile</em></h1>
+      <p class="lead">Explora intensidades máximas de precipitación para distintas duraciones y períodos de retorno, obtenidas a partir de productos grillados horarios y observaciones en terreno.</p>
+      <div class="button-row">
+        <a class="button" href="/">Explorar plataforma</a>
+        <a class="button button--secondary" href="https://doi.org/10.5194/hess-30-91-2026">Leer la investigación</a>
+        <a class="hero-method-link" href="/metodologia">Cómo se construyeron →</a>
+      </div>
+    </div>
+    <div class="hero-viz" aria-label="Representación abstracta de curvas intensidad-duración-frecuencia">
+      <div class="hero-viz__label label-y">Intensidad</div>
+      <div class="hero-viz__label label-x">Duración</div>
+      <div class="rain-field" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="curve curve--1"><i></i></div>
+      <div class="curve curve--2"><i></i></div>
+      <div class="curve curve--3"><i></i></div>
+      <div class="curve curve--4"><i></i></div>
+      <div class="return-tag return-tag--1">T = 100 años</div>
+      <div class="return-tag return-tag--2">T = 25 años</div>
+      <div class="return-tag return-tag--3">T = 2 años</div>
+    </div>
+  </div>
+  <div class="hero__scroll">Desliza para recorrer <span>↓</span></div>
+</section>
+
+<style>
+  .hero { position: relative; height: clamp(620px, calc(100svh - 96px), 880px); overflow-x: clip; display: grid; align-items: center; padding: clamp(2.25rem, 5vh, 4rem) 0 clamp(3.75rem, 7vh, 5rem); background: linear-gradient(135deg, #fff 0 58%, #f1f7f9 58%); }
+  .hero-grid { position: absolute; inset: 0; opacity: 0.32; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 70px 70px; mask-image: linear-gradient(to right, black, transparent 72%); }
+  .hero__inner { position: relative; display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(380px, 0.92fr); gap: clamp(2rem, 7vw, 7rem); align-items: center; }
+  .hero__copy { display: grid; gap: clamp(.9rem, 1.8vh, 1.25rem); max-width: 720px; }
+  .hero__copy > .eyebrow { max-width: 470px; line-height: 1.5; }
+  .hero h1 { font-size: clamp(2.9rem, 4.8vw, 4.8rem); }
+  .hero h1 em { color: var(--red-500); font-style: normal; }
+  .hero .lead { max-width: 650px; }
+  .hero-method-link { color: var(--navy-700); font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .hero-viz { position: relative; min-height: clamp(320px, 46vh, 430px); border-left: 2px solid var(--navy-800); border-bottom: 2px solid var(--navy-800); perspective: 800px; }
+  .hero-viz::before { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgb(121 173 187 / 0.18), transparent 70%); }
+  .hero-viz__label { position: absolute; color: var(--navy-700); font-size: 0.66rem; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; }
+  .label-y { left: -2.1rem; top: 0; writing-mode: vertical-rl; transform: rotate(180deg); }
+  .label-x { right: 0; bottom: -2rem; }
+  .rain-field { position: absolute; inset: 0; overflow: hidden; }
+  .rain-field i { position: absolute; top: -18%; width: 2px; height: 18%; background: linear-gradient(transparent, var(--rain-500)); transform: rotate(12deg); animation: rain 2.4s linear 2; }
+  .rain-field i:nth-child(1) { left: 10%; animation-delay: -0.4s; }.rain-field i:nth-child(2) { left: 25%; animation-delay: -1.3s; }.rain-field i:nth-child(3) { left: 41%; animation-delay: -0.8s; }.rain-field i:nth-child(4) { left: 58%; animation-delay: -2s; }.rain-field i:nth-child(5) { left: 72%; animation-delay: -1.1s; }.rain-field i:nth-child(6) { left: 88%; animation-delay: -0.1s; }.rain-field i:nth-child(7) { left: 50%; animation-delay: -1.8s; }.rain-field i:nth-child(8) { left: 94%; animation-delay: -0.6s; }
+  .curve { position: absolute; left: 3%; width: 94%; height: 38%; overflow: hidden; transform-origin: left center; filter: drop-shadow(0 7px 4px rgb(21 58 95 / 0.08)); animation: draw-curve 1.3s var(--ease-out) both; }
+  .curve i { position: absolute; inset: 0; display: block; background: var(--navy-800); clip-path: polygon(0 3%, 8% 10%, 17% 20%, 28% 32%, 41% 45%, 56% 57%, 72% 67%, 86% 74%, 100% 79%, 100% 83%, 86% 78%, 72% 71%, 56% 61%, 41% 49%, 28% 36%, 17% 24%, 8% 14%, 0 7%); }
+  .curve--1 { top: 9%; animation-delay: 120ms; }
+  .curve--2 { top: 24%; animation-delay: 240ms; }.curve--2 i { background: var(--red-500); }
+  .curve--3 { top: 39%; animation-delay: 360ms; }.curve--3 i { background: var(--rain-500); }
+  .curve--4 { top: 52%; animation-delay: 480ms; }.curve--4 i { background: #b7d0d8; }
+  .return-tag { position: absolute; right: 2%; padding: 0.22rem 0.5rem; color: white; background: var(--navy-800); font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em; }
+  .return-tag--1 { top: 37%; }.return-tag--2 { top: 52%; background: var(--red-500); }.return-tag--3 { top: 67%; color: var(--navy-950); background: var(--rain-200); }
+  .hero__scroll { position: absolute; left: 50%; bottom: 1.1rem; color: var(--muted); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; transform: translateX(-50%); }
+  .hero__scroll span { color: var(--red-500); font-size: 1rem; }
+  @keyframes rain { to { transform: translate(70px, 700px) rotate(12deg); } }
+  @keyframes draw-curve { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
+  @media (max-width: 920px) { .hero { height: auto; min-height: auto; background: linear-gradient(180deg, white 0 62%, var(--mist) 62%); } .hero__inner { grid-template-columns: 1fr; } .hero-viz { min-height: 350px; margin-top: 1rem; } .hero__scroll { display: none; } }
+  @media (max-height: 780px) and (min-width: 921px) { .hero { height: max(520px, calc(100svh - 96px)); padding-block: 1.5rem 3.2rem; } .hero__copy { gap: .8rem; } .hero h1 { font-size: clamp(2.65rem, 4.2vw, 4rem); } .hero .lead { font-size: 1.02rem; } .hero-viz { min-height: min(390px, 57vh); } }
+  @media (max-width: 520px) { .hero h1 { font-size: clamp(2.75rem, 13vw, 4rem); } .hero-viz { min-height: 280px; } .return-tag { font-size: 0.52rem; } }
+</style>
