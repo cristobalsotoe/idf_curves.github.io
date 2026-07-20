@@ -1,0 +1,43 @@
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="footer-brand">
+      <img src="/brand/idf-logo-negative.svg" alt="" width="104" height="104" />
+      <div>
+        <strong>Curvas IDF Chile</strong>
+        <p>Información científica para caracterizar precipitaciones extremas y apoyar decisiones de diseño.</p>
+      </div>
+    </div>
+    <div>
+      <p class="footer-label">Navegación</p>
+      <a href="/home">Inicio editorial</a>
+      <a href="/metodologia">Metodología</a>
+      <a href="/notas">Notas</a>
+      <a href="/historia">Historia</a>
+    </div>
+    <div>
+      <p class="footer-label">Recursos</p>
+      <a href="/">Plataforma interactiva</a>
+      <a href="https://doi.org/10.5194/hess-30-91-2026" rel="external">Artículo científico</a>
+      <a href="https://github.com/cristobalsotoe/IDF_Curves" rel="external">Código en GitHub</a>
+    </div>
+  </div>
+  <div class="container site-footer__base">
+    <span>© {new Date().getFullYear()} Curvas IDF Chile</span>
+    <span>Investigación abierta · Chile</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer { padding: 5rem 0 1.5rem; color: var(--rain-200); background: var(--navy-950); }
+  .site-footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: clamp(2rem, 7vw, 6rem); }
+  .footer-brand { display: flex; max-width: 520px; gap: 1.2rem; }
+  .footer-brand img { flex: 0 0 auto; width: 104px; height: 104px; }
+  .footer-brand strong { display: block; margin-bottom: 0.7rem; color: white; font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 0.02em; text-transform: uppercase; }
+  .site-footer__grid > div:not(.footer-brand) { display: grid; align-content: start; gap: 0.55rem; }
+  .site-footer a { color: var(--rain-200); font-size: 0.9rem; text-decoration: none; }
+  .site-footer a:hover { color: white; text-decoration: underline; }
+  .footer-label { margin-bottom: 0.5rem; color: white; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }
+  .site-footer__base { display: flex; margin-top: 4rem; padding-top: 1.4rem; justify-content: space-between; gap: 1rem; border-top: 1px solid rgb(203 224 229 / 0.2); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  @media (max-width: 780px) { .site-footer__grid { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: 1 / -1; } }
+  @media (max-width: 500px) { .site-footer__grid { grid-template-columns: 1fr; } .footer-brand { align-items: flex-start; } .site-footer__base { flex-direction: column; } }
+</style>

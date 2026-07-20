@@ -1,0 +1,18 @@
+---
+import EditorialLayout from '../layouts/EditorialLayout.astro';
+---
+<EditorialLayout title="Página no encontrada" description="La página solicitada no está disponible.">
+  <section class="not-found">
+    <div class="container not-found__inner">
+      <div class="number" aria-hidden="true">404</div>
+      <p class="eyebrow">Fuera de la grilla</p>
+      <h1>Página no encontrada</h1>
+      <p class="lead">La dirección puede haber cambiado o el contenido ya no está disponible.</p>
+      <div class="button-row"><a class="button" href="/home">Volver al inicio</a><a class="button button--secondary" href="/">Abrir plataforma</a></div>
+    </div>
+  </section>
+</EditorialLayout>
+
+<style>
+  .not-found { min-height: 72vh; display: grid; place-items: center; overflow: hidden; }.not-found__inner { position: relative; display: grid; gap: 1.4rem; justify-items: start; padding-block: 6rem; }.not-found h1 { font-size: clamp(3.3rem, 8vw, 7rem); }.number { position: absolute; z-index: -1; right: 0; top: 50%; color: var(--mist); font-family: var(--font-display); font-size: clamp(10rem, 28vw, 27rem); font-weight: 900; line-height: 1; transform: translateY(-50%); }
+</style>

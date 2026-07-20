@@ -1,0 +1,45 @@
+---
+const paperSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ScholarlyArticle',
+  headline: 'Developing Intensity-Duration-Frequency (IDF) curves using sub-daily gridded and in situ datasets: characterising precipitation extremes in a drying climate',
+  datePublished: '2026-01-12',
+  pagination: '91–117',
+  isPartOf: { '@type': 'Periodical', name: 'Hydrology and Earth System Sciences', volumeNumber: '30' },
+  author: ['Cristóbal Soto-Escobar', 'Mauricio Zambrano-Bigiarini', 'Violeta Tolorza', 'René Garreaud'].map((name) => ({ '@type': 'Person', name })),
+  sameAs: 'https://doi.org/10.5194/hess-30-91-2026',
+  license: 'https://creativecommons.org/licenses/by/4.0/',
+};
+---
+<article class="paper-card reveal">
+  <div class="paper-card__mark">HESS<br /><span>2026</span></div>
+  <div class="paper-card__content">
+    <p class="eyebrow">Publicación científica</p>
+    <h3>Developing Intensity-Duration-Frequency (IDF) curves using sub-daily gridded and in situ datasets: characterising precipitation extremes in a drying climate</h3>
+    <p>Cristóbal Soto-Escobar, Mauricio Zambrano-Bigiarini, Violeta Tolorza y René Garreaud</p>
+    <p class="paper-card__meta">Hydrology and Earth System Sciences, 30, 91–117 · 12 de enero de 2026</p>
+    <div class="paper-links">
+      <a href="https://hess.copernicus.org/articles/30/91/2026/hess-30-91-2026.html">HTML</a>
+      <a href="https://hess.copernicus.org/articles/30/91/2026/hess-30-91-2026.pdf">PDF</a>
+      <a href="https://doi.org/10.5281/zenodo.16956066">Suplemento</a>
+      <a href="https://hess.copernicus.org/articles/30/91/2026/hess-30-91-2026.bib">BibTeX</a>
+    </div>
+    <p class="paper-license">Artículo publicado bajo licencia CC BY 4.0.</p>
+  </div>
+</article>
+<script is:inline type="application/ld+json" set:html={JSON.stringify(paperSchema)}></script>
+
+<style>
+  .paper-card { display: grid; grid-template-columns: 210px 1fr; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-lg); background: white; box-shadow: var(--shadow-sm); }
+  .paper-card__mark { display: grid; place-content: center; min-height: 300px; color: white; background: var(--navy-800); font-family: var(--font-display); font-size: 3.5rem; font-weight: 850; letter-spacing: -0.04em; line-height: .75; text-align: center; }
+  .paper-card__mark span { color: var(--rain-200); font-size: 1rem; letter-spacing: .2em; }
+  .paper-card__content { display: grid; gap: 1.1rem; padding: clamp(2rem, 5vw, 4rem); justify-items: start; }
+  .paper-card__content h3 { max-width: 820px; font-size: clamp(1.6rem, 3.4vw, 2.8rem); }
+  .paper-card__content > p:not(.eyebrow) { color: var(--muted); }
+  .paper-card__meta { font-size: .82rem; }
+  .paper-links { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .paper-links a { padding: .55rem .8rem; border: 1px solid var(--navy-800); border-radius: 999px; color: var(--navy-800); font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+  .paper-links a:first-child { color: white; background: var(--navy-800); }
+  .paper-license { font-size: .72rem; }
+  @media (max-width: 670px) { .paper-card { grid-template-columns: 1fr; } .paper-card__mark { min-height: 150px; } }
+</style>

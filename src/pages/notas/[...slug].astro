@@ -1,0 +1,33 @@
+---
+import { getCollection, render } from 'astro:content';
+import NoteLayout from '../../layouts/NoteLayout.astro';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes', ({ data }) => !data.draft);
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+<NoteLayout
+  title={note.data.title}
+  description={note.data.summary}
+  publishedAt={note.data.publishedAt}
+  updatedAt={note.data.updatedAt}
+  authors={note.data.authors}
+  category={note.data.category}
+  tags={note.data.tags}
+>
+  <Content />
+  {note.data.sources.length > 0 && (
+    <section class="sources">
+      <h2>Fuentes</h2>
+      <ul>{note.data.sources.map((source) => <li><a href={source.url}>{source.label}</a></li>)}</ul>
+    </section>
+  )}
+</NoteLayout>
+
+<style>
+  .sources { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); }.sources h2 { font-size: 2rem; }.sources ul { padding-left: 1.2rem; }.sources a { color: var(--navy-700); font-weight: 650; }
+</style>

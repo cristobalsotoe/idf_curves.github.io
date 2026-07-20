@@ -1,0 +1,187 @@
+---
+import EditorialLayout from '../layouts/EditorialLayout.astro';
+
+const milestones = [
+  {
+    year: '2020',
+    type: 'Tesis de Ingeniería Civil',
+    title: 'Construcción de curvas Intensidad–Duración–Frecuencia, de alta resolución espacial para la zona Centro-Sur de Chile',
+    authors: 'Cristóbal Soto-Escobar',
+    text: 'Trabajo para optar al título de Ingeniero Civil. Profesor guía: Mauricio Zambrano-Bigiarini.',
+    tone: 'navy',
+  },
+  {
+    year: '2020',
+    type: 'EGU General Assembly',
+    title: 'Spatially-distributed IDF curves for Center-Southern Chile using IMERG',
+    authors: 'Zambrano, M., Soto, C. y Baez, O.',
+    text: 'EGU General Assembly 2020, Online · EGU2020-21091.',
+    href: 'https://doi.org/10.5194/egusphere-egu2020-21091',
+    linkLabel: 'DOI 10.5194/egusphere-egu2020-21091',
+    tone: 'rain',
+  },
+  {
+    year: '2021',
+    type: 'XXV Congreso Chileno de Ingeniería Hidráulica',
+    title: 'Construcción de curvas Intensidad–Duración–Frecuencia, de alta resolución espacial para la zona Centro-Sur de Chile',
+    authors: 'Soto, C. y Zambrano, M.',
+    text: 'Presentación en el XXV Congreso Chileno de Ingeniería Hidráulica (SOCHID).',
+    tone: 'red',
+  },
+  {
+    year: '2023',
+    type: 'Simposio Internacional · Septiembre',
+    title: 'Duración y Frecuencia de precipitaciones máximas en Chile utilizando productos grillados de precipitación de alta resolución espacial',
+    authors: 'Soto, C., Tolorza, V. y Zambrano, M.',
+    text: 'Simposio Internacional: Clima y Resiliencia en Tiempo de Cambio.',
+    href: 'https://doi.org/10.5281/zenodo.8327125',
+    linkLabel: 'DOI 10.5281/zenodo.8327125',
+    tone: 'navy',
+  },
+  {
+    year: '2023',
+    type: 'XVI Congreso Geológico Chileno · Noviembre',
+    title: 'Duración y Frecuencia de precipitaciones máximas en Chile utilizando productos grillados de precipitación de alta resolución espacial',
+    authors: 'Soto, C., Tolorza, V. y Zambrano, M.',
+    text: 'Presentación en el XVI Congreso Geológico Chileno.',
+    href: 'https://doi.org/10.5281/zenodo.10340229',
+    linkLabel: 'DOI 10.5281/zenodo.10340229',
+    tone: 'rain',
+  },
+  {
+    year: '2024',
+    type: 'EGU General Assembly · Viena',
+    title: 'Spatially-distributed Intensity-Duration-Frequency (IDF) curves for Chile using sub-daily gridded datasets',
+    authors: 'Zambrano-Bigiarini, M., Soto, C. y Tolorza, V.',
+    text: 'EGU General Assembly 2024, Vienna, Austria · EGU24-21043.',
+    href: 'https://doi.org/10.5194/egusphere-egu24-21043',
+    linkLabel: 'DOI 10.5194/egusphere-egu24-21043',
+    tone: 'red',
+  },
+  {
+    year: '2026',
+    type: 'Hydrology and Earth System Sciences',
+    title: 'Developing Intensity-Duration-Frequency (IDF) curves using sub-daily gridded and in situ datasets: characterising precipitation extremes in a drying climate',
+    leadAuthor: 'Soto-Escobar, C.',
+    authorHref: 'https://orcid.org/0009-0005-3867-6991',
+    authors: 'Zambrano-Bigiarini, M., Tolorza, V. y Garreaud, R.',
+    text: 'Hydrology and Earth System Sciences, 30, 91–117.',
+    href: 'https://doi.org/10.5194/hess-30-91-2026',
+    linkLabel: 'DOI 10.5194/hess-30-91-2026',
+    tone: 'navy',
+  },
+  {
+    year: 'Ahora',
+    type: 'Difusión y transferencia',
+    title: 'Llevar el conocimiento científico a las instituciones y a la sociedad',
+    authors: '',
+    text: 'El siguiente paso es difundir la plataforma y contribuir al traspaso del conocimiento científico, aportando a que el diseño de obras hidráulicas se realice con la mayor y mejor información disponible actualmente.',
+    tone: 'rain',
+  },
+];
+---
+<EditorialLayout title="Historia" description="La evolución de Curvas IDF Chile: de una investigación universitaria a una plataforma de curvas IDF abierta.">
+  <header class="page-hero history-hero">
+    <div class="container page-hero__inner">
+      <p class="breadcrumbs"><a href="/home">Inicio</a> / Historia</p>
+      <p class="eyebrow">Evolución del proyecto</p>
+      <h1>De una tesis a una plataforma para Chile</h1>
+      <p class="lead">La historia de Curvas IDF Chile reúne investigación universitaria, congresos científicos, colaboración interdisciplinaria y una publicación revisada por pares.</p>
+    </div>
+  </header>
+
+  <section class="section story-intro">
+    <div class="container story-intro__grid">
+      <p class="story-initial" aria-hidden="true">IDF</p>
+      <div class="prose reveal">
+        <p class="lead">El proyecto comenzó en 2020 con una tesis de Ingeniería Civil enfocada en construir curvas IDF de alta resolución espacial para la zona Centro-Sur de Chile.</p>
+        <p>Desde entonces, el trabajo amplió su cobertura, incorporó nuevos productos grillados y observaciones en terreno, y fue presentado progresivamente ante comunidades de hidrología, clima y geología.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist timeline-section">
+    <div class="container">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Línea de tiempo</p>
+        <h2>Ocho hitos de investigación, publicación y transferencia</h2>
+      </div>
+      <div class="timeline">
+        {milestones.map((item) => (
+          <article class={`milestone milestone--${item.tone} reveal`}>
+            <div class="milestone__year">{item.year}</div>
+            <div class="milestone__dot" aria-hidden="true"></div>
+            <div class="milestone__content">
+              <p class="milestone__type">{item.type}</p>
+              <h3>{item.title}</h3>
+              {(item.leadAuthor || item.authors) && (
+                <p class="milestone__authors">
+                  {item.leadAuthor && <a href={item.authorHref}>{item.leadAuthor}</a>}
+                  {item.leadAuthor && item.authors && ' '}
+                  {item.authors}
+                </p>
+              )}
+              <p>{item.text}</p>
+              {item.href && <a class="milestone__link" href={item.href}>{item.linkLabel} ↗</a>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy values-section">
+    <div class="container">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Principios</p>
+        <h2>Lo que permanece mientras la plataforma evoluciona</h2>
+      </div>
+      <div class="value-grid">
+        <article class="reveal"><span>01</span><h3>Rigor</h3><p>La comunicación se apoya en un método documentado y resultados revisados por pares.</p></article>
+        <article class="reveal"><span>02</span><h3>Apertura</h3><p>El código, la publicación y la plataforma facilitan la revisión y la reutilización.</p></article>
+        <article class="reveal"><span>03</span><h3>Contexto</h3><p>Los resultados se presentan junto con sus supuestos, alcances y limitaciones.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section next-section">
+    <div class="container next-grid">
+      <div class="reveal">
+        <p class="eyebrow">Siguiente etapa</p>
+        <h2>Información disponible para mejores decisiones</h2>
+      </div>
+      <div class="prose reveal">
+        <p class="lead">La siguiente etapa es ampliar la difusión de la plataforma de curvas IDF y facilitar el traspaso del conocimiento científico hacia instituciones, profesionales y la sociedad.</p>
+        <p>El objetivo es aportar a que el diseño de obras hidráulicas utilice la mayor y mejor información disponible, manteniendo claros el origen, los alcances y las limitaciones de los resultados.</p>
+        <div class="button-row">
+          <a class="button" href="/">Explorar plataforma</a>
+          <a class="button button--secondary" href="/notas">Leer notas</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</EditorialLayout>
+
+<style>
+  .history-hero { background: linear-gradient(120deg, var(--mist), white 65%); }
+  .story-intro__grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(3rem, 9vw, 9rem); }
+  .story-initial { margin: 0; color: var(--navy-100); font-family: var(--font-display); font-size: clamp(8rem, 22vw, 19rem); font-weight: 900; letter-spacing: -.1em; line-height: .75; }
+  .timeline { position: relative; }
+  .timeline::before { content: ''; position: absolute; left: calc(22% + 2.5rem); top: 1rem; bottom: 1rem; width: 2px; background: var(--line); }
+  .milestone { display: grid; grid-template-columns: 22% 5rem 1fr; min-height: 230px; align-items: start; }
+  .milestone__year { color: var(--navy-800); font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 5.5rem); font-weight: 850; line-height: 1; text-align: right; }
+  .milestone__dot { position: relative; z-index: 1; width: 1.3rem; height: 1.3rem; margin: 1rem auto 0; border: 4px solid var(--mist); border-radius: 50%; background: var(--navy-800); box-shadow: 0 0 0 2px var(--navy-800); }
+  .milestone--red .milestone__year { color: var(--red-500); }.milestone--red .milestone__dot { background: var(--red-500); box-shadow: 0 0 0 2px var(--red-500); }.milestone--rain .milestone__year { color: var(--rain-700); }.milestone--rain .milestone__dot { background: var(--rain-700); box-shadow: 0 0 0 2px var(--rain-700); }
+  .milestone__content { max-width: 760px; padding: .35rem 0 3.5rem; }
+  .milestone__type { margin-bottom: .65rem; color: var(--red-600) !important; font-size: .7rem !important; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  .milestone__content h3 { margin-bottom: .85rem; font-size: clamp(1.45rem, 2.5vw, 2.25rem); font-style: italic; }
+  .milestone__content p { color: var(--muted); font-size: 1rem; }
+  .milestone__authors { margin-bottom: .55rem; color: var(--navy-800) !important; font-weight: 700; }
+  .milestone__authors a { text-underline-offset: .2em; }
+  .milestone__link { display: inline-block; margin-top: .8rem; color: var(--navy-700); font-size: .76rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .value-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .value-grid article { min-height: 290px; padding: clamp(1.5rem, 3vw, 2.5rem); border: 1px solid rgb(203 224 229 / .2); border-radius: var(--radius-md); background: rgb(255 255 255 / .04); }
+  .value-grid span { color: #ff9295; font-family: var(--font-display); font-weight: 800; }.value-grid h3 { margin: 4rem 0 1rem; font-size: 2rem; }.value-grid p { color: var(--rain-200); }
+  .next-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 9vw, 9rem); }.next-grid > div { display: grid; gap: 1.4rem; align-content: start; }
+  @media (max-width: 760px) { .story-intro__grid, .next-grid { grid-template-columns: 1fr; } .story-initial { position: absolute; opacity: .5; }.milestone { grid-template-columns: 4.6rem 2.4rem 1fr; min-height: 0; }.timeline::before { left: 5.8rem; }.milestone__year { padding-top: .25rem; font-size: 1.15rem; text-align: right; }.milestone__dot { width: 1rem; height: 1rem; margin-top: .7rem; }.milestone__content { padding-bottom: 3.5rem; }.value-grid { grid-template-columns: 1fr; }.value-grid article { min-height: 220px; }.value-grid h3 { margin-top: 2rem; } }
+</style>

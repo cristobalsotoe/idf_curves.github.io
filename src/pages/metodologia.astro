@@ -1,0 +1,171 @@
+---
+import EditorialLayout from '../layouts/EditorialLayout.astro';
+import MethodFlow from '../components/MethodFlow.astro';
+
+const products = [
+  ['IMERG v06B', 'Satélite', 'Cobertura grillada de precipitación'],
+  ['IMERG v07B', 'Satélite', 'Versión actualizada evaluada en el estudio'],
+  ['ERA5', 'Reanálisis', 'Información atmosférica de cobertura global'],
+  ['ERA5-Land', 'Reanálisis', 'Variables terrestres a mayor resolución'],
+  ['CMORPH-CDR', 'Satélite', 'Registro climático de precipitación'],
+];
+---
+<EditorialLayout title="Metodología" description="Cómo se construyeron y evaluaron las curvas IDF de alta resolución para Chile.">
+  <header class="page-hero">
+    <div class="container page-hero__inner">
+      <p class="breadcrumbs"><a href="/home">Inicio</a> / Metodología</p>
+      <p class="eyebrow">Método y fuentes</p>
+      <h1>De la lluvia observada a una estimación espacial</h1>
+      <p class="lead">Una síntesis accesible del procedimiento publicado en Hydrology and Earth System Sciences. Para reproducir o auditar resultados, consulte siempre el artículo científico.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container method-intro">
+      <div class="section-heading reveal">
+        <p class="eyebrow">La pregunta</p>
+        <h2>¿Cómo estimar extremos donde las estaciones son escasas?</h2>
+      </div>
+      <div class="prose reveal">
+        <p class="lead">Las estaciones entregan observaciones locales de gran valor, pero su distribución espacial es irregular. Los productos grillados ofrecen cobertura continua, aunque deben evaluarse frente a datos instrumentales.</p>
+        <p>El estudio combina ambos tipos de información para caracterizar máximos de precipitación y construir curvas intensidad–duración–frecuencia en un territorio largo, montañoso y climáticamente diverso.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist">
+    <div class="container">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Secuencia analítica</p>
+        <h2>Un procedimiento común para comparar fuentes distintas</h2>
+      </div>
+      <MethodFlow />
+    </div>
+  </section>
+
+  <section class="section data-section">
+    <div class="container data-grid">
+      <div class="data-copy">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Fuentes de datos</p>
+          <h2>161 estaciones y cinco productos grillados</h2>
+          <p class="lead">Cada producto se contrasta con las observaciones disponibles para entender su desempeño en distintas duraciones y zonas del país.</p>
+        </div>
+        <div class="product-list">
+          {products.map((product) => (
+            <article class="product reveal">
+              <strong>{product[0]}</strong>
+              <span>{product[1]}</span>
+              <p>{product[2]}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+      <figure class="research-figure reveal">
+        <div class="research-figure__viewport">
+          <img src="/images/study-area.png" alt="Área de estudio y ubicación de estaciones pluviométricas consideradas en Chile" width="1892" height="2426" loading="lazy" />
+        </div>
+        <figcaption>Área de estudio y red de observaciones. Fuente: Soto-Escobar et al. (2026), figura 1, licencia CC BY 4.0.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--navy scale-section">
+    <div class="container">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Escalas analizadas</p>
+        <h2>De una tormenta breve a tres días de precipitación</h2>
+      </div>
+      <div class="scale-grid">
+        <article class="scale-card reveal">
+          <p>Duraciones</p>
+          <strong>1–72 h</strong>
+          <div class="duration-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <span>11 ventanas temporales</span>
+        </article>
+        <article class="scale-card reveal">
+          <p>Períodos de retorno</p>
+          <strong>2–100 años</strong>
+          <div class="return-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <span>6 niveles de frecuencia estadística</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container map-grid">
+      <figure class="research-figure research-figure--wide reveal">
+        <div class="research-figure__viewport">
+          <img src="/images/idf-maps.png" alt="Mapas comparativos de intensidad máxima para diferentes duraciones y productos de precipitación" width="1304" height="1549" loading="lazy" />
+        </div>
+        <figcaption>Patrones espaciales de máximos de precipitación. Fuente: Soto-Escobar et al. (2026), figura 5, licencia CC BY 4.0.</figcaption>
+      </figure>
+      <div class="map-copy reveal">
+        <p class="eyebrow">Lectura espacial</p>
+        <h2>La señal cambia con la duración</h2>
+        <div class="prose">
+          <p>Los máximos no reproducen simplemente el patrón de precipitación media. En escalas de 24 horas o más, los valores más altos se sitúan en sectores andinos entre Maule y La Araucanía.</p>
+          <p>También aparece un gradiente longitudinal, desde las tierras bajas hacia los Andes. La respuesta varía entre productos, por lo que la comparación forma parte esencial de la interpretación.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist">
+    <div class="container responsible-grid">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Uso responsable</p>
+        <h2>Una curva no reemplaza el criterio profesional</h2>
+      </div>
+      <div class="caution-grid">
+        <article class="reveal"><strong>Incertidumbre</strong><p>Todo producto y ajuste estadístico tiene límites que deben reconocerse en decisiones de diseño.</p></article>
+        <article class="reveal"><strong>Cobertura</strong><p>La evaluación en el extremo norte es más limitada por la baja densidad de estaciones.</p></article>
+        <article class="reveal"><strong>Contexto local</strong><p>Se recomienda contrastar los resultados con antecedentes hidrológicos, normativos y de terreno.</p></article>
+        <article class="reveal"><strong>Diseño conservador</strong><p>El artículo propone considerar el máximo entre IMERG v07B, ERA5 y ERA5-Land como alternativa más segura.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section source-section">
+    <div class="container source-box reveal">
+      <div>
+        <p class="eyebrow">Fuente primaria</p>
+        <h2>Consulte el método completo</h2>
+        <p class="lead">La formulación matemática, las métricas de evaluación, los resultados por producto y las limitaciones están documentados en el artículo revisado por pares.</p>
+      </div>
+      <a class="button" href="https://doi.org/10.5194/hess-30-91-2026">Abrir publicación</a>
+    </div>
+  </section>
+</EditorialLayout>
+
+<style>
+  .method-intro { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 9vw, 9rem); }
+  .data-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(3rem, 8vw, 7rem); align-items: start; }
+  .product-list { display: grid; }
+  .product { display: grid; grid-template-columns: 1fr .7fr 1.5fr; gap: 1rem; padding: 1.1rem 0; align-items: baseline; border-top: 1px solid var(--line); }
+  .product strong { color: var(--navy-800); }.product span { color: var(--red-600); font-size: .67rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }.product p { color: var(--muted); font-size: .84rem; }
+  .research-figure { margin: 0; padding: .75rem; border: 1px solid var(--line); border-radius: var(--radius-md); background: white; box-shadow: var(--shadow-sm); }
+  .research-figure__viewport { width: 100%; height: clamp(360px, 42vw, 540px); display: grid; place-items: center; overflow: hidden; border-radius: calc(var(--radius-md) - .35rem); background: var(--mist); }
+  .research-figure img { width: 100%; height: 100%; border-radius: calc(var(--radius-md) - .35rem); object-fit: contain; object-position: center; }
+  .research-figure figcaption { padding: .8rem .4rem .2rem; color: var(--muted); font-size: .7rem; line-height: 1.4; }
+  .scale-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .scale-card { min-height: 320px; display: grid; padding: clamp(1.7rem, 4vw, 3rem); align-content: space-between; border: 1px solid rgb(203 224 229 / .25); border-radius: var(--radius-lg); background: rgb(255 255 255 / .04); }
+  .scale-card p { color: var(--rain-200); font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  .scale-card strong { color: white; font-family: var(--font-display); font-size: clamp(3.2rem, 7vw, 6.4rem); line-height: 1; }
+  .scale-card > span { color: var(--rain-200); font-size: .85rem; }
+  .duration-bars, .return-dots { height: 60px; display: flex; align-items: end; gap: .6rem; }
+  .duration-bars i { flex: 1; height: 20%; background: var(--rain-500); }.duration-bars i:nth-child(2) { height: 31%; }.duration-bars i:nth-child(3) { height: 45%; background: var(--red-500); }.duration-bars i:nth-child(4) { height: 62%; }.duration-bars i:nth-child(5) { height: 77%; }.duration-bars i:nth-child(6) { height: 100%; }
+  .return-dots { align-items: center; }.return-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--rain-500); box-shadow: 0 0 0 5px rgb(121 173 187 / .12); }.return-dots i:nth-child(2) { width: 13px; height: 13px; }.return-dots i:nth-child(3) { width: 18px; height: 18px; background: var(--red-500); }.return-dots i:nth-child(4) { width: 23px; height: 23px; }.return-dots i:nth-child(5) { width: 29px; height: 29px; }.return-dots i:nth-child(6) { width: 38px; height: 38px; }
+  .map-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(3rem, 8vw, 7rem); align-items: center; }
+  .map-copy { display: grid; gap: 1.3rem; }
+  .responsible-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(3rem, 8vw, 7rem); }
+  .caution-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .caution-grid article { min-height: 200px; padding: 1.5rem; border: 1px solid var(--line); border-top: 4px solid var(--navy-800); border-radius: var(--radius-sm); background: white; }
+  .caution-grid article:nth-child(2) { border-top-color: var(--red-500); }.caution-grid article:nth-child(3) { border-top-color: var(--rain-500); }
+  .caution-grid strong { display: block; margin-bottom: 1.8rem; color: var(--navy-800); font-family: var(--font-display); font-size: 1.4rem; }.caution-grid p { color: var(--muted); font-size: .9rem; }
+  .source-box { display: flex; padding: clamp(2rem, 6vw, 5rem); align-items: center; justify-content: space-between; gap: 3rem; border-radius: var(--radius-lg); background: var(--mist); }
+  .source-box > div { max-width: 760px; display: grid; gap: 1rem; }
+  @media (max-width: 850px) { .method-intro, .data-grid, .map-grid, .responsible-grid { grid-template-columns: 1fr; } .research-figure { width: 100%; max-width: 680px; margin-inline: auto; } .research-figure__viewport { height: min(68vh, 620px); } }
+  @media (max-width: 650px) { .product { grid-template-columns: 1fr 1fr; }.product p { grid-column: 1 / -1; } .scale-grid, .caution-grid { grid-template-columns: 1fr; } .source-box { align-items: start; flex-direction: column; } }
+</style>

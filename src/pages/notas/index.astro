@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import NotesGrid from '../../components/NotesGrid.astro';
+const notes = (await getCollection('notes', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+---
+<EditorialLayout title="Notas" description="Guías, explicaciones y hallazgos para comprender y utilizar curvas IDF en Chile.">
+  <header class="page-hero">
+    <div class="container page-hero__inner">
+      <p class="breadcrumbs"><a href="/home">Inicio</a> / Notas</p>
+      <p class="eyebrow">Biblioteca editorial</p>
+      <h1>Ideas para leer la lluvia extrema</h1>
+      <p class="lead">Guías y notas breves que conectan los resultados científicos con su interpretación técnica, territorial y práctica.</p>
+    </div>
+  </header>
+  <section class="section section--mist">
+    <div class="container">
+      <div class="notes-count"><span>{notes.length.toString().padStart(2, '0')}</span><p>notas publicadas</p></div>
+      <NotesGrid notes={notes} />
+    </div>
+  </section>
+</EditorialLayout>
+
+<style>
+  .notes-count { display: flex; margin-bottom: 2rem; align-items: baseline; gap: .8rem; color: var(--muted); }.notes-count span { color: var(--red-500); font-family: var(--font-display); font-size: 3rem; font-weight: 850; line-height: 1; }.notes-count p { font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+</style>
