@@ -17,10 +17,7 @@ function figureFromImageParagraph(node) {
     type: 'element',
     tagName: 'figure',
     properties: { className: ['note-figure'] },
-    children: [
-      img,
-      { type: 'element', tagName: 'figcaption', properties: {}, children: [{ type: 'text', value: alt }] },
-    ],
+    children: [img],
   };
 }
 
