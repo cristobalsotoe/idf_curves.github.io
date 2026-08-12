@@ -15,3 +15,6 @@ tmp/
 
 # Imágenes de tarjetas al compartir, generadas por scripts/generate-og-images.mjs
 public/og/
+public/favicon-*.png
+public/favicon.ico
+public/apple-touch-icon.png
