@@ -9,8 +9,6 @@ featured: true
 sources:
   - label: "Artículo científico en HESS"
     url: "https://hess.copernicus.org/articles/30/91/2026/hess-30-91-2026.html"
-  - label: "Repositorio IDF Curves"
-    url: "https://github.com/csotoescobar/IDF_Curves"
 ---
 
 Un artículo científico está diseñado para documentar una pregunta, un método y sus resultados. Una plataforma interactiva tiene otra tarea: permitir que una persona recorra esos resultados según su ubicación o necesidad.
