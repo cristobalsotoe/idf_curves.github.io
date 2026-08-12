@@ -16,6 +16,10 @@ interface Props {
   tags: string[];
   readingMinutes: number;
   tocEntries?: { slug: string; text: string }[];
+  image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 }
 const {
   title,
@@ -27,6 +31,10 @@ const {
   tags,
   readingMinutes,
   tocEntries = [],
+  image,
+  imageAlt,
+  imageWidth,
+  imageHeight,
 } = Astro.props;
 
 const dateFormat = new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
@@ -40,6 +48,10 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site).toString();
   publishedAt={publishedAt}
   updatedAt={updatedAt}
   authors={authors}
+  image={image}
+  imageAlt={imageAlt ?? title}
+  imageWidth={imageWidth}
+  imageHeight={imageHeight}
 >
   <header class="note-hero">
     <div class="container note-hero__inner">

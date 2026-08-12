@@ -12,3 +12,6 @@ dist/
 # Local production files
 .DS_Store
 tmp/
+
+# Imágenes de tarjetas al compartir, generadas por scripts/generate-og-images.mjs
+public/og/

@@ -3,16 +3,34 @@ import { getCollection, render } from 'astro:content';
 import NoteLayout from '../../layouts/NoteLayout.astro';
 import { readingTime } from '../../lib/reading-time.mjs';
 import { tocEntries } from '../../lib/toc.mjs';
+import { firstImagePath } from '../../lib/note-image.mjs';
 
 export async function getStaticPaths() {
   const notes = await getCollection('notes', ({ data }) => !data.draft);
   return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
 }
 
+// `import.meta.glob` se resuelve en compilación, así que debe vivir aquí, con
+// rutas literales; no puede moverse a un módulo auxiliar.
+const noteImages = import.meta.glob<{ default: ImageMetadata }>(
+  '../../content/notes/**/*.{png,jpg,jpeg,webp,avif}',
+  { eager: true },
+);
+
 const { note } = Astro.props;
 const { Content, headings } = await render(note);
 const readingMinutes = readingTime(note.body);
 const toc = tocEntries(headings);
+
+// Imagen de la tarjeta al compartir: la JPEG de 1200x630 que produce
+// `scripts/generate-og-images.mjs` a partir de la primera figura de la nota
+// (o de `heroImage`, si el frontmatter lo define). Aquí solo se comprueba que la
+// nota tenga figura; si no la tiene, el layout recurre a `/og.png`.
+//
+// La regla de selección es la misma en ambos lados porque los dos usan
+// `firstImagePath`.
+const relativeImage = note.data.heroImage ?? firstImagePath(note.body);
+const hasFigure = Boolean(relativeImage && noteImages[`../../content/notes/${relativeImage}`]);
 ---
 <NoteLayout
   title={note.data.title}
@@ -24,6 +42,10 @@ const toc = tocEntries(headings);
   tags={note.data.tags}
   readingMinutes={readingMinutes}
   tocEntries={toc}
+  image={hasFigure ? `/og/${note.id}.jpg` : undefined}
+  imageAlt={note.data.heroAlt}
+  imageWidth={hasFigure ? 1200 : undefined}
+  imageHeight={hasFigure ? 630 : undefined}
 >
   <Content />
   {note.data.sources.length > 0 && (

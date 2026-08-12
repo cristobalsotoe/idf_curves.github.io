@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/generate-og-images.mjs",
     "dev": "astro dev",
+    "prebuild": "node scripts/generate-og-images.mjs",
     "build": "astro build && node scripts/prepare-sites.mjs",
     "preview": "astro preview",
     "check": "astro check"
