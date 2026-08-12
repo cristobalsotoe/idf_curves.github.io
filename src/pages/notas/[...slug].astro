@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
 import NoteLayout from '../../layouts/NoteLayout.astro';
+import { readingTime } from '../../lib/reading-time.mjs';
+import { tocEntries } from '../../lib/toc.mjs';
 
 export async function getStaticPaths() {
   const notes = await getCollection('notes', ({ data }) => !data.draft);
@@ -8,7 +10,9 @@ export async function getStaticPaths() {
 }
 
 const { note } = Astro.props;
-const { Content } = await render(note);
+const { Content, headings } = await render(note);
+const readingMinutes = readingTime(note.body);
+const toc = tocEntries(headings);
 ---
 <NoteLayout
   title={note.data.title}
@@ -18,6 +22,8 @@ const { Content } = await render(note);
   authors={note.data.authors}
   category={note.data.category}
   tags={note.data.tags}
+  readingMinutes={readingMinutes}
+  tocEntries={toc}
 >
   <Content />
   {note.data.sources.length > 0 && (

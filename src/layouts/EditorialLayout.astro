@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import GlobalHeader from '../components/GlobalHeader.astro';
 import GlobalFooter from '../components/GlobalFooter.astro';
+import { goatcounterScript } from '../config/analytics';
 import '../styles/global.css';
 
 interface Props {
@@ -10,6 +11,8 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   publishedAt?: Date;
+  updatedAt?: Date;
+  authors?: string[];
 }
 
 const {
@@ -18,10 +21,18 @@ const {
   image = '/og.png',
   type = 'website',
   publishedAt,
+  updatedAt,
+  authors = [],
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const imageUrl = new URL(image, Astro.site);
 const fullTitle = title === 'Curvas IDF Chile' ? title : `${title} — Curvas IDF Chile`;
+const publisher = {
+  '@type': 'Organization',
+  name: 'Curvas IDF Chile',
+  url: 'https://curvasidf.cl/',
+  logo: { '@type': 'ImageObject', url: new URL('/favicon.png', Astro.site).toString() },
+};
 const schema = {
   '@context': 'https://schema.org',
   '@type': type === 'article' ? 'Article' : 'WebSite',
@@ -31,6 +42,9 @@ const schema = {
   url: canonical.toString(),
   image: imageUrl.toString(),
   ...(publishedAt ? { datePublished: publishedAt.toISOString() } : {}),
+  ...(updatedAt ? { dateModified: updatedAt.toISOString() } : publishedAt ? { dateModified: publishedAt.toISOString() } : {}),
+  ...(authors.length ? { author: authors.map((name) => ({ '@type': 'Person', name })) } : {}),
+  ...(type === 'article' ? { publisher, mainEntityOfPage: canonical.toString() } : {}),
 };
 ---
 <!doctype html>
@@ -86,5 +100,25 @@ const schema = {
       document.addEventListener('astro:page-load', initReveal);
       initReveal();
     </script>
+    {goatcounterScript && (
+      <>
+        <script is:inline async data-goatcounter={goatcounterScript} src="https://gc.zgo.at/count.js"></script>
+        <script is:inline>
+          // count.js solo contabiliza la carga inicial. Con View Transitions el
+          // resto de la navegación ocurre sin recargar, así que cada cambio de
+          // página se cuenta a mano; la primera se omite para no duplicarla.
+          (() => {
+            let first = true;
+            document.addEventListener('astro:page-load', () => {
+              if (first) { first = false; return; }
+              window.goatcounter?.count?.({
+                path: window.location.pathname,
+                title: document.title,
+              });
+            });
+          })();
+        </script>
+      </>
+    )}
   </body>
 </html>

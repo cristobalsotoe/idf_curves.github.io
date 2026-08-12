@@ -1,0 +1,56 @@
+---
+/**
+ * Tarjeta con la nota más reciente, para la pantalla de carga de la raíz.
+ *
+ * Aprovecha el tiempo que tarda en cargar la aplicación Shiny y, de paso, da a
+ * la raíz contenido y enlaces internos reales que hoy no tiene.
+ */
+interface Props {
+  href: string;
+  title: string;
+  publishedAt: Date;
+  readingMinutes: number;
+}
+const { href, title, publishedAt, readingMinutes } = Astro.props;
+const dateFormat = new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+
+<a class="recent-note" href={href}>
+  <span class="recent-note__eyebrow">Nota reciente</span>
+  <span class="recent-note__title">{title}</span>
+  <span class="recent-note__meta">
+    <time datetime={publishedAt.toISOString()}>{dateFormat.format(publishedAt)}</time>
+    <span aria-hidden="true">·</span>
+    <span>{readingMinutes} min de lectura</span>
+  </span>
+  <span class="recent-note__cta">Leer nota <span aria-hidden="true">→</span></span>
+</a>
+
+<style>
+  .recent-note {
+    position: absolute; z-index: 3; right: clamp(1.25rem, 3vw, 2.5rem); bottom: clamp(1.25rem, 3vw, 2.5rem);
+    display: grid; gap: .55rem; width: min(320px, calc(100vw - 2.5rem));
+    padding: 1.15rem 1.3rem;
+    border: 1px solid rgb(203 224 229 / .22); border-radius: .8rem;
+    background: rgb(10 32 54 / .55);
+    backdrop-filter: blur(10px);
+    color: #cbe0e5; text-align: left; text-decoration: none;
+    animation: recent-note-in 700ms var(--ease-out, cubic-bezier(.22, 1, .36, 1)) 500ms both;
+    transition: transform 240ms ease, border-color 240ms ease, background 240ms ease;
+  }
+  .recent-note:hover { transform: translateY(-3px); border-color: rgb(121 173 187 / .6); background: rgb(10 32 54 / .78); }
+  .recent-note__eyebrow { color: #79adbb; font-size: .6rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+  .recent-note__title {
+    display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3;
+    color: white; font-size: .95rem; font-weight: 700; line-height: 1.35;
+  }
+  .recent-note__meta { display: flex; flex-wrap: wrap; gap: .4rem; color: rgb(203 224 229 / .75); font-size: .72rem; }
+  .recent-note__cta { color: white; font-size: .74rem; font-weight: 700; text-underline-offset: .25em; text-decoration: underline; }
+
+  @keyframes recent-note-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .recent-note { animation: none; } .recent-note:hover { transform: none; } }
+
+  @media (max-width: 640px) {
+    .recent-note { position: static; width: min(340px, 100%); margin-top: .5rem; }
+  }
+</style>

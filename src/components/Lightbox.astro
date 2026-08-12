@@ -1,0 +1,141 @@
+---
+/**
+ * Ampliación de las figuras de una nota.
+ *
+ * Las imágenes ya se sirven como WebP optimizado de gran tamaño, así que la
+ * vista ampliada reutiliza el mismo `src` y no genera una segunda descarga.
+ */
+---
+
+<div class="lightbox" data-lightbox hidden>
+  <div class="lightbox__backdrop" data-lightbox-close></div>
+  <div class="lightbox__panel" role="dialog" aria-modal="true" aria-label="Imagen ampliada">
+    <button class="lightbox__close" type="button" data-lightbox-close aria-label="Cerrar imagen ampliada">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <img data-lightbox-image alt="" />
+    <p class="lightbox__caption" data-lightbox-caption></p>
+  </div>
+</div>
+
+<style>
+  /* La fila explícita `minmax(0, 1fr)` es lo que hace que el `max-height: 100%`
+     del panel se resuelva contra la pantalla. Con una fila automática se
+     resuelve contra su propio contenido y la imagen desborda hacia abajo. */
+  /* Por encima del encabezado adherido (90) y de la barra superior (100), y por
+     debajo del enlace de salto (200), que debe seguir siendo alcanzable. */
+  .lightbox { position: fixed; z-index: 120; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr); place-items: center; padding: clamp(1rem, 4vw, 3rem); }
+  .lightbox[hidden] { display: none; }
+  .lightbox__backdrop { position: absolute; inset: 0; background: rgb(10 32 54 / .93); animation: lightbox-in 220ms var(--ease-out); }
+  /* Filas explícitas: la imagen ocupa el espacio sobrante y la leyenda toma el
+     suyo. Sin `minmax(0, 1fr)` la imagen impone su alto natural y empuja la
+     leyenda fuera de la pantalla. */
+  .lightbox__panel { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 1rem; max-width: min(1400px, 100%); max-height: 100%; justify-items: center; animation: lightbox-in 260ms var(--ease-out); }
+  .lightbox__panel img { max-width: 100%; max-height: 100%; min-height: 0; height: auto; width: auto; object-fit: contain; border-radius: var(--radius-sm); background: var(--paper); }
+  .lightbox__caption { margin: 0; max-width: 70ch; max-height: 28vh; overflow-y: auto; color: var(--rain-200); font-size: .85rem; line-height: 1.5; text-align: center; }
+  .lightbox__caption:empty { display: none; }
+  /* Anclado al viewport, no al panel: con imágenes altas el panel llega al
+     borde superior y el botón quedaba fuera de la pantalla. */
+  .lightbox__close {
+    position: fixed; z-index: 2; top: clamp(.75rem, 2vw, 1.5rem); right: clamp(.75rem, 2vw, 1.5rem);
+    display: grid; width: 2.5rem; height: 2.5rem; place-items: center;
+    border: 1px solid rgb(203 224 229 / .35); border-radius: 999px;
+    color: var(--paper); background: rgb(10 32 54 / .6); cursor: pointer;
+  }
+  .lightbox__close svg { width: 1.1rem; height: 1.1rem; }
+  .lightbox__close:hover { background: rgb(203 224 229 / .18); }
+  @keyframes lightbox-in { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .lightbox__backdrop, .lightbox__panel { animation: none; } }
+  @media (max-width: 640px) { .lightbox__caption { max-height: 22vh; } }
+</style>
+
+<style is:global>
+  .prose figure.note-figure img { cursor: zoom-in; }
+  body.has-lightbox-open { overflow: hidden; }
+</style>
+
+<script>
+  const initLightbox = () => {
+    const lightbox = document.querySelector<HTMLElement>('[data-lightbox]:not([data-lightbox-ready])');
+    if (!lightbox) return;
+    lightbox.dataset.lightboxReady = 'true';
+
+    const image = lightbox.querySelector<HTMLImageElement>('[data-lightbox-image]');
+    const caption = lightbox.querySelector<HTMLElement>('[data-lightbox-caption]');
+    const closeButton = lightbox.querySelector<HTMLButtonElement>('.lightbox__close');
+    if (!image || !caption || !closeButton) return;
+
+    let opener: HTMLElement | null = null;
+
+    /**
+     * Las notas escriben la leyenda como un párrafo aparte tras la imagen
+     * («**Figura 1.** *…*»), no como `<figcaption>`. Se toma ese párrafo para
+     * que la vista ampliada conserve la leyenda, sin alterar cómo se renderiza
+     * la nota.
+     */
+    const captionFor = (figure: HTMLElement | null) => {
+      const own = figure?.querySelector('figcaption')?.textContent?.trim();
+      if (own) return own;
+      const next = figure?.nextElementSibling;
+      if (next?.tagName === 'P' && /^\s*figura\s+\d+/i.test(next.textContent ?? '')) {
+        return next.textContent?.trim() ?? '';
+      }
+      return '';
+    };
+
+    const close = () => {
+      if (lightbox.hidden) return;
+      lightbox.hidden = true;
+      document.body.classList.remove('has-lightbox-open');
+      image.removeAttribute('src');
+      opener?.focus();
+      opener = null;
+    };
+
+    const open = (source: HTMLImageElement) => {
+      image.src = source.currentSrc || source.src;
+      image.alt = source.alt || '';
+      caption.textContent = captionFor(source.closest('figure'));
+      opener = source;
+      lightbox.hidden = false;
+      document.body.classList.add('has-lightbox-open');
+      closeButton.focus();
+    };
+
+    lightbox.querySelectorAll('[data-lightbox-close]').forEach((element) => {
+      element.addEventListener('click', close);
+    });
+
+    // El foco no debe escaparse del diálogo mientras está abierto. Con un único
+    // control enfocable, mantenerlo ahí basta.
+    lightbox.addEventListener('keydown', (event) => {
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        closeButton.focus();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') close();
+    });
+
+    document.addEventListener('astro:before-swap', close, { once: true });
+
+    document.querySelectorAll<HTMLImageElement>('.prose figure.note-figure img:not([data-zoomable])').forEach((source) => {
+      source.dataset.zoomable = 'true';
+      source.setAttribute('role', 'button');
+      source.setAttribute('tabindex', '0');
+      source.setAttribute('aria-label', `Ampliar imagen: ${source.alt || 'figura de la nota'}`);
+      source.addEventListener('click', () => open(source));
+      source.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          open(source);
+        }
+      });
+    });
+  };
+
+  document.addEventListener('astro:page-load', initLightbox);
+  initLightbox();
+</script>

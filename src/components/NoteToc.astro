@@ -1,0 +1,135 @@
+---
+/**
+ * Índice lateral de la nota.
+ *
+ * Los enlaces son anclas nativas, así que navegan sin JavaScript. Lo único que
+ * lo requiere es el resalte de la sección activa y el plegado en móvil.
+ */
+interface Props {
+  entries: { slug: string; text: string }[];
+}
+const { entries } = Astro.props;
+
+// Varias notas numeran sus secciones en el propio encabezado («1. ¿Qué tan…»).
+// El índice ya numera por su cuenta, así que se quita el prefijo para no
+// mostrarlo dos veces.
+const label = (text: string) => text.replace(/^\s*\d+[.)]\s*/, '');
+---
+
+<details class="note-toc" data-note-toc open>
+  <summary class="note-toc__summary">
+    <span>En esta nota</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </summary>
+  <nav aria-label="Índice de la nota">
+    <p class="note-toc__title">En esta nota</p>
+    <ol>
+      {entries.map((entry) => (
+        <li>
+          <a href={`#${entry.slug}`} data-toc-link={entry.slug}>{label(entry.text)}</a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+</details>
+
+<style>
+  .note-toc { position: sticky; top: 7rem; }
+  .note-toc__summary { display: none; }
+  .note-toc__title { margin: 0 0 .9rem; color: var(--muted); font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .note-toc ol { margin: 0; padding: 0; list-style: none; counter-reset: toc; }
+  .note-toc li { counter-increment: toc; }
+  .note-toc a {
+    display: grid; grid-template-columns: 1.4rem 1fr; gap: .5rem;
+    padding: .4rem 0 .4rem .7rem;
+    border-left: 2px solid var(--line);
+    color: var(--muted); font-size: .82rem; line-height: 1.35; font-weight: 600;
+    text-decoration: none;
+    transition: color 200ms ease, border-color 200ms ease;
+  }
+  .note-toc a::before { content: counter(toc) '.'; color: var(--rain-500); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .note-toc a:hover { color: var(--navy-800); border-left-color: var(--rain-500); }
+  .note-toc a[aria-current='true'] { color: var(--navy-800); border-left-color: var(--red-500); font-weight: 750; }
+  .note-toc a[aria-current='true']::before { color: var(--red-500); }
+
+  @media (max-width: 840px) {
+    .note-toc {
+      position: static;
+      margin-bottom: 2.5rem; padding: .25rem 1rem;
+      border: 1px solid var(--line); border-radius: var(--radius-sm);
+      background: var(--paper);
+    }
+    .note-toc__summary {
+      display: flex; padding: .9rem 0; justify-content: space-between; align-items: center; gap: 1rem;
+      color: var(--navy-800); font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+      cursor: pointer; list-style: none;
+    }
+    .note-toc__summary::-webkit-details-marker { display: none; }
+    .note-toc__summary svg { width: 1.1rem; height: 1.1rem; transition: transform 220ms var(--ease-out); }
+    .note-toc[open] .note-toc__summary svg { transform: rotate(180deg); }
+    .note-toc[open] .note-toc__summary { border-bottom: 1px solid var(--line); }
+    .note-toc nav { padding-block: .9rem; }
+    .note-toc__title { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .note-toc__summary svg { transition: none; } }
+</style>
+
+<script>
+  const MOBILE_QUERY = '(max-width: 840px)';
+  /** Distancia desde el borde superior bajo la cual un encabezado cuenta como «actual». */
+  const ACTIVE_OFFSET = 140;
+
+  const initToc = () => {
+    document.querySelectorAll<HTMLElement>('[data-note-toc]:not([data-toc-ready])').forEach((toc) => {
+      toc.dataset.tocReady = 'true';
+      const details = toc as HTMLDetailsElement;
+
+      // En móvil el índice arranca plegado. Se hace desde JavaScript para que,
+      // sin JavaScript, el listado quede visible en lugar de inaccesible.
+      const mobile = window.matchMedia(MOBILE_QUERY);
+      const applyViewport = () => { details.open = !mobile.matches; };
+      applyViewport();
+      mobile.addEventListener('change', applyViewport);
+
+      const links = Array.from(toc.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+      const targets = links
+        .map((link) => ({ link, heading: document.getElementById(link.dataset.tocLink ?? '') }))
+        .filter((entry): entry is { link: HTMLAnchorElement; heading: HTMLElement } => Boolean(entry.heading));
+      if (!targets.length) return;
+
+      let queued = false;
+      const highlight = () => {
+        queued = false;
+        let active = targets[0];
+        for (const target of targets) {
+          if (target.heading.getBoundingClientRect().top <= ACTIVE_OFFSET) active = target;
+        }
+        for (const target of targets) {
+          if (target === active) target.link.setAttribute('aria-current', 'true');
+          else target.link.removeAttribute('aria-current');
+        }
+      };
+
+      const onScroll = () => {
+        if (queued) return;
+        queued = true;
+        window.requestAnimationFrame(highlight);
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      highlight();
+
+      // Al navegar con View Transitions el documento se reemplaza: se sueltan
+      // los escuchas de window para no acumularlos entre notas.
+      document.addEventListener('astro:before-swap', () => {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+        mobile.removeEventListener('change', applyViewport);
+      }, { once: true });
+    });
+  };
+
+  document.addEventListener('astro:page-load', initToc);
+  initToc();
+</script>

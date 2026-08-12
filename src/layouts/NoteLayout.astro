@@ -1,5 +1,10 @@
 ---
 import EditorialLayout from './EditorialLayout.astro';
+import NoteToc from '../components/NoteToc.astro';
+import ShareBar from '../components/ShareBar.astro';
+import VisitCounter from '../components/VisitCounter.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { shouldShowToc } from '../lib/toc.mjs';
 
 interface Props {
   title: string;
@@ -9,11 +14,33 @@ interface Props {
   authors: string[];
   category: string;
   tags: string[];
+  readingMinutes: number;
+  tocEntries?: { slug: string; text: string }[];
 }
-const { title, description, publishedAt, updatedAt, authors, category, tags } = Astro.props;
+const {
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  authors,
+  category,
+  tags,
+  readingMinutes,
+  tocEntries = [],
+} = Astro.props;
+
 const dateFormat = new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const showToc = shouldShowToc(tocEntries);
+const shareUrl = new URL(Astro.url.pathname, Astro.site).toString();
 ---
-<EditorialLayout title={title} description={description} type="article" publishedAt={publishedAt}>
+<EditorialLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedAt={publishedAt}
+  updatedAt={updatedAt}
+  authors={authors}
+>
   <header class="note-hero">
     <div class="container note-hero__inner">
       <a class="breadcrumbs" href="/notas">← Todas las notas</a>
@@ -24,24 +51,50 @@ const dateFormat = new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'lo
         <span>{authors.join(' · ')}</span>
         <span>Publicado el {dateFormat.format(publishedAt)}</span>
         {updatedAt && <span>Actualizado el {dateFormat.format(updatedAt)}</span>}
+        <span>{readingMinutes} min de lectura</span>
+        <VisitCounter />
       </div>
+      <ShareBar url={shareUrl} title={title} />
     </div>
   </header>
-  <article class="container note-body">
+  <article class:list={['container', 'note-body', showToc && 'note-body--with-toc']}>
+    {showToc && <NoteToc entries={tocEntries} />}
     <div class="prose"><slot /></div>
     <aside class="note-tags" aria-label="Etiquetas">
       {tags.map((tag) => <span>{tag}</span>)}
     </aside>
   </article>
+  <Lightbox />
 </EditorialLayout>
 
 <style>
   .note-hero { padding: clamp(7rem, 13vw, 11rem) 0 5rem; background: var(--mist); }
-  .note-hero__inner { display: grid; gap: 1.2rem; max-width: 960px; }
-  .note-hero h1 { font-size: clamp(3rem, 7vw, 6rem); }
+  /* `minmax(0, 960px)`, no `max-width`: la columna implícita se dimensiona por
+     el contenido máximo, así que un título con una palabra muy larga
+     («hidrometeorológicos») la ensanchaba más allá del contenedor y arrastraba
+     consigo a toda la cabecera en pantallas angostas. */
+  .note-hero__inner { display: grid; grid-template-columns: minmax(0, 960px); gap: 1.2rem; }
+  .note-hero h1 { font-size: clamp(3rem, 7vw, 6rem); overflow-wrap: break-word; hyphens: auto; }
   .note-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; color: var(--muted); font-size: 0.86rem; font-weight: 600; }
   .note-body { display: grid; grid-template-columns: minmax(0, 760px) 1fr; gap: clamp(2rem, 8vw, 7rem); align-items: start; padding-block: clamp(4rem, 8vw, 7rem); }
+  .note-body--with-toc { grid-template-columns: minmax(0, 220px) minmax(0, 760px) 1fr; gap: clamp(1.5rem, 4vw, 3.5rem); }
   .note-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; position: sticky; top: 7rem; }
   .note-tags span { padding: 0.35rem 0.65rem; border: 1px solid var(--line); border-radius: 999px; color: var(--navy-700); font-size: 0.75rem; font-weight: 700; }
-  @media (max-width: 840px) { .note-body { grid-template-columns: 1fr; } .note-tags { position: static; } }
+
+  /* Entre 840 y 1100px las tres columnas dejan el texto demasiado angosto:
+     las etiquetas bajan al pie y el índice conserva su columna. */
+  @media (max-width: 1100px) {
+    .note-body--with-toc { grid-template-columns: minmax(0, 200px) minmax(0, 1fr); }
+    .note-body--with-toc .note-tags { position: static; grid-column: 2; padding-top: 2.5rem; }
+  }
+  @media (max-width: 840px) {
+    .note-body, .note-body--with-toc { grid-template-columns: 1fr; gap: 0; }
+    .note-tags, .note-body--with-toc .note-tags { position: static; grid-column: auto; padding-top: 2.5rem; }
+  }
+</style>
+
+<style is:global>
+  /* La cabecera es fija: sin este margen, al saltar desde el índice el
+     encabezado de destino queda oculto tras ella. */
+  .prose h2, .prose h3 { scroll-margin-top: 6.5rem; }
 </style>
