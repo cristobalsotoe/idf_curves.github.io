@@ -1,5 +1,12 @@
 ---
+import { getCollection } from 'astro:content';
+import RecentNoteCard from '../components/RecentNoteCard.astro';
+import { readingTime } from '../lib/reading-time.mjs';
+import { goatcounterScript } from '../config/analytics';
+
 const appUrl = 'https://csoto.shinyapps.io/IDF_Curves/';
+const [recentNote] = (await getCollection('notes', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
@@ -19,20 +26,35 @@ const schema = {
     <meta name="description" content="Plataforma interactiva de curvas IDF de alta resolución para Chile." />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="canonical" href="https://curvasidf.cl/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CL" />
+    <meta property="og:url" content="https://curvasidf.cl/" />
     <meta property="og:title" content="Plataforma interactiva — Curvas IDF Chile" />
     <meta property="og:description" content="Explore curvas de intensidad, duración y frecuencia para Chile." />
     <meta property="og:image" content="https://curvasidf.cl/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Plataforma interactiva — Curvas IDF Chile" />
+    <meta name="twitter:description" content="Explore curvas de intensidad, duración y frecuencia para Chile." />
+    <meta name="twitter:image" content="https://curvasidf.cl/og.png" />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
     <title>Plataforma interactiva — Curvas IDF Chile</title>
   </head>
   <body>
     <div class="loader" data-loader role="status" aria-live="polite">
       <div class="loader__content">
-        <img src="/brand/idf-logo-negative.svg" alt="Curvas IDF Chile" width="320" height="320" />
+        <h1><img src="/brand/idf-logo-negative.svg" alt="Curvas IDF Chile" width="320" height="320" /></h1>
         <div class="loader__line" aria-hidden="true"><span></span></div>
         <p>Cargando plataforma de curvas IDF</p>
         <a href="/home">Visitar el sitio editorial</a>
       </div>
+      {recentNote && (
+        <RecentNoteCard
+          href={`/notas/${recentNote.id}/`}
+          title={recentNote.data.title}
+          publishedAt={recentNote.data.publishedAt}
+          readingMinutes={readingTime(recentNote.body)}
+        />
+      )}
     </div>
     <iframe
       src={appUrl}
@@ -54,6 +76,9 @@ const schema = {
       });
       window.setTimeout(() => loader?.classList.add('is-delayed'), 10000);
     </script>
+    {goatcounterScript && (
+      <script is:inline async data-goatcounter={goatcounterScript} src="https://gc.zgo.at/count.js"></script>
+    )}
   </body>
 </html>
 
@@ -64,6 +89,9 @@ const schema = {
   .loader { position: fixed; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; overflow: hidden; color: #cbe0e5; background: radial-gradient(circle at center, #10273a 0, #07131e 38%, #03070b 72%); font-family: "Helvetica Neue", Helvetica, Arial, Calibri, sans-serif; transition: opacity .7s ease, visibility .7s ease; }
   .loader::before { content: ''; position: absolute; width: min(72vw, 720px); aspect-ratio: 1; border: 1px solid rgb(121 173 187 / .2); border-radius: 50%; box-shadow: 0 0 0 55px rgb(121 173 187 / .045), 0 0 0 110px rgb(121 173 187 / .025); }
   .loader__content { position: relative; z-index: 2; display: grid; justify-items: center; gap: 1.35rem; }
+  /* El logo pasa a ser el h1 de la página: la raíz no tenía encabezado. Sin
+     cambio visual — el h1 solo envuelve la imagen que ya estaba. */
+  .loader h1 { display: grid; margin: 0; justify-items: center; }
   .loader.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
   .loader img { width: clamp(220px, 30vw, 340px); height: auto; filter: drop-shadow(0 18px 34px rgb(0 0 0 / .55)); animation: logo-arrival 1s cubic-bezier(.22, 1, .36, 1) both; }
   .loader p { margin: 0; color: white; font-size: clamp(.68rem, 1vw, .82rem); font-weight: 700; letter-spacing: .16em; text-align: center; text-transform: uppercase; }
@@ -74,6 +102,7 @@ const schema = {
   .fallback { position: fixed; z-index: 3; inset: auto 1rem 1rem; padding: 1rem; color: white; background: #153a5f; font-family: system-ui; text-align: center; }
   @keyframes load { from { transform: translateX(-100%); } to { transform: translateX(180%); } }
   @keyframes logo-arrival { from { opacity: 0; transform: scale(.84); } to { opacity: 1; transform: scale(1); } }
+  @media (max-width: 640px) { .loader { gap: 1.6rem; padding: 2rem 1rem; } }
   @media (max-width: 520px) { .loader::before { width: 90vw; } .loader__content { gap: 1rem; } .loader img { width: min(68vw, 280px); } .loader p { max-width: 82vw; line-height: 1.5; } }
   @media (prefers-reduced-motion: reduce) { .loader__line span { animation: none; width: 100%; } .loader img { animation: none; } }
 </style>

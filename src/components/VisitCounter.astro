@@ -1,0 +1,58 @@
+---
+/**
+ * Contador de visitas leído del endpoint público de GoatCounter.
+ *
+ * Se mantiene oculto salvo que obtenga un número mayor que cero. Eso cubre a la
+ * vez el caso «aún no hay datos» (GoatCounter responde 404 con count 0) y
+ * cualquier fallo de red, respuesta inválida o ajuste desactivado en el panel.
+ * Un contador ausente es preferible a uno equivocado.
+ */
+import { GOATCOUNTER_CODE } from '../config/analytics';
+---
+
+{GOATCOUNTER_CODE && (
+  <span class="visit-counter" data-visit-counter hidden>
+    <span data-visit-count></span> visitas
+  </span>
+)}
+
+<style>
+  .visit-counter[hidden] { display: none; }
+</style>
+
+<script>
+  import { GOATCOUNTER_CODE } from '../config/analytics';
+
+  const formatter = new Intl.NumberFormat('es-CL');
+
+  const loadCount = async (element: HTMLElement) => {
+    // Se consulta con el mismo `location.pathname` que registra count.js, de modo
+    // que la ruta consultada y la almacenada coinciden por construcción.
+    const endpoint = `https://${GOATCOUNTER_CODE}.goatcounter.com/counter/${window.location.pathname}.json`;
+    try {
+      const response = await fetch(endpoint);
+      if (!response.ok) return;
+      const payload = await response.json();
+      const count = Number.parseInt(payload?.count_unique ?? payload?.count ?? '0', 10);
+      if (!Number.isFinite(count) || count <= 0) return;
+
+      const slot = element.querySelector<HTMLElement>('[data-visit-count]');
+      if (!slot) return;
+      slot.textContent = formatter.format(count);
+      element.hidden = false;
+    } catch {
+      // Silencio deliberado: el contador simplemente no aparece.
+    }
+  };
+
+  const initVisitCounters = () => {
+    if (!GOATCOUNTER_CODE) return;
+    document.querySelectorAll<HTMLElement>('[data-visit-counter]:not([data-counter-ready])').forEach((element) => {
+      element.dataset.counterReady = 'true';
+      loadCount(element);
+    });
+  };
+
+  document.addEventListener('astro:page-load', initVisitCounters);
+  initVisitCounters();
+</script>
