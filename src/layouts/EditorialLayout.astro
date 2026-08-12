@@ -30,6 +30,9 @@ const {
   imageWidth,
   imageHeight,
 } = Astro.props;
+// `meta name="author"` lo pide el inspector de LinkedIn. En las notas son sus
+// autores; en el resto del sitio, el proyecto.
+const byline = authors.length ? authors.join(', ') : 'Curvas IDF Chile';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const imageUrl = new URL(image, Astro.site);
 const fullTitle = title === 'Curvas IDF Chile' ? title : `${title} — Curvas IDF Chile`;
@@ -60,9 +63,11 @@ const schema = {
     <meta name="viewport" content="width=device-width" />
     <meta name="theme-color" content="#153A5F" />
     <meta name="description" content={description} />
+    <meta name="author" content={byline} />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="canonical" href={canonical} />
     <meta property="og:locale" content="es_CL" />
+    <meta property="og:site_name" content="Curvas IDF Chile" />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -71,6 +76,13 @@ const schema = {
     {imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
     {imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
     {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+    {type === 'article' && publishedAt && (
+      <meta property="article:published_time" content={publishedAt.toISOString()} />
+    )}
+    {type === 'article' && (updatedAt ?? publishedAt) && (
+      <meta property="article:modified_time" content={(updatedAt ?? publishedAt)!.toISOString()} />
+    )}
+    {type === 'article' && authors.map((name) => <meta property="article:author" content={name} />)}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
