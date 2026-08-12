@@ -6,6 +6,8 @@ authors: ["Cristóbal Soto-Escobar", "Mauricio Zambrano-Bigiarini"]
 category: "Datos"
 tags: ["Temporal", "Eventos extremos", "Hidrometeorología", "Período de retorno", "Curvas IDF", "ERA5-Land", "Atacama", "Coquimbo", "Chile", "Infraestructura"]
 featured: true
+heroImage: "temporal-julio-2026/figuras/map_periodo_retorno_era5land_1981-2021_grande.webp"
+heroAlt: "Mapa del período de retorno estimado del temporal del 15 al 20 de julio de 2026 en Chile, en años, para ventanas móviles de 6, 12, 24, 48 y 72 horas"
 sources:
   - label: "Soto-Escobar et al. (2026), Hydrology and Earth System Sciences"
     url: "https://doi.org/10.5194/hess-30-91-2026"
